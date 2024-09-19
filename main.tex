@@ -1,6 +1,6 @@
 \documentclass[a4paper]{article}
 \usepackage[affil-it]{authblk}
-
+\usepackage{amsmath}
 \begin{document}
 
 \title{ AM-Reading-5: \\  Optimization Methods for Image Processing}
@@ -17,11 +17,38 @@
 
 \maketitle
 \pagebreak
-\section{Week 1: Defining the minization problem and image denoising, proximal gradient descent method.}
+ % change margin, maybe font 2 small
+\section{Week 1: Defining the minimization problem and image denoising, proximal gradient descent method.}
 
 Answers to questions:
 \begin{enumerate}
-\item Q1: 
+\item  
+\subitem For Scheme 1:
+We wish to write the regularization-term regression into a Least Square Problem and express them in terms of $\text{arg min} \{ \frac{1}{2} || u - x||^2_2 + \lambda || \Phi \vec{x}||^2_2$\}. \\ We first want to augment the data to incorporate the $L_2$ regularization penalty term into the matrix.  We  expressed $\tilde{X}$ as $\begin{bmatrix}
+\vec{x} \\ \sqrt{\lambda}I \end{bmatrix}$ where I is the identity matrix and $\tilde{u} = \begin{bmatrix}
+u \\ 0 \end{bmatrix}$ where $0 \in R^{1000}$. We then see that the new matrix  $\tilde{X} \in R^{(m + 1000) \text{ x } 1000}$. Consequentially, $\tilde{u} \in R^{m + 1000}$. Also note that $\Phi\vec{x}$ is the squared sum of the ?weight functions. \\
+
+% boxing the function
+\noindent\fbox{\begin{minipage}{\textwidth}
+\paragraph{LS for Scheme 1}  We now obtain the standard Least Square Problem: \\ \begin{equation} \vec{x}^* = \text{arg min }\left\{ \frac{1}{2}||\tilde{X}\Phi \vec{x} - \tilde{u}||^2_2 \right\} \end{equation} \\. 
+\end{minipage}} \\ 
+
+\subitem For Scheme 2: We wish to write the regularization-term regression into a Least Square Problem and express them in terms of $\text{arg min} \{ \frac{1}{2} || u - x||^2_2 + \lambda || \Phi \vec{x}||_1 $\}. Since the penalty in this case is a L1 norm, we cannot directly linearized it into a least square problem. Instead, we will solve this problem by subjecting it to a constraint, i.e. $||\Phi\vec{x}||_1 \leq t $, and t is a parameter related to $\lambda $. The dimensions of the matrix remain the same. \\
+
+
+
+% boxing the function
+\noindent\fbox{\begin{minipage}{\textwidth}
+\paragraph{LS for Scheme 2}     
+We now obtain the standard Least Square Problem: 
+\begin{center}
+\\ \begin{equation} \vec{x}^* = \text{arg min }\left\{ \frac{1}{2}||u - \Phi \vec{x}||^2_2 \right\} \end{equation} subject to  $||\Phi\vec{x}||_1 \leq t $ as we wish to minimize the $L_1$ regularization term.
+\end{center}
+\end{minipage}} \\
+
+*self-learning notes: By adding the L1 regularization term, LASSO regression can shrink the coefficients towards zero. When λ is sufficiently large, some coefficients are driven to exactly zero. 
+
+This property of LASSO makes it useful for feature selection, as the variables with zero coefficients are effectively removed from the model. 
 \item Q2:
 \item Q3:
 \item Q4:
