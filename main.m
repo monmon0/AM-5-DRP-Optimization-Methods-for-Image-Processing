@@ -5,7 +5,7 @@ clear all;
 
 addpath('./data/signals'); 
 
-n = 1000;  
+n = 999;  
 mean = 0.0; 
 std = 0.4; 
 rng('default') % For reproducibility
