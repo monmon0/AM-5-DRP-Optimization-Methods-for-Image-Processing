@@ -16,30 +16,40 @@ u = u_true + noise; % noising signal
 % use sparse matrix, i.e R = sparse(R)
 
 % defining the R matrix
-D = zeros(999);
+%D = zeros(999);
 
-for i = 1:999
-    for j = 1:999
-        if (i == 1 && j == 1) || (i == 1000 && j == 1000) || (i == j + 1) || (i == j - 1)
-            D(i,j) = 1;
-        elseif (i == j)
-             D(i,j) = 2;
-        end
-    end
-end
+%for i = 1:999
+%    for j = 1:999
+%        if (i == 1 && j == 1) || (i == 1000 && j == 1000) || (i == j + 1) || (i == j - 1)
+%            D(i,j) = 1;
+%        elseif (i == j)
+%             D(i,j) = 2;
+%        end
+%    end
+%end
 
-R = sparse(D);
+%R = sparse(D);
 
+<<<<<<< HEAD
 lambda = 1000;
+=======
+%lambda = 10;
+>>>>>>> 08ae5cfb95fc31ac15ddcb6c5083dfb5a2b4fe9b
 
 % define matrix 
-M_1 = ones(999); % vector of all values 1
+%M_1 = ones(999); % vector of all values 1
 
-M_2 = 2*lambda*R + M_1;
-M_2 = sparse(M_2);
+%M_2 = 2*lambda*R + M_1;
+%M_2 = sparse(M_2);
 
+<<<<<<< HEAD
 u = transpose(u);
 u_true = transpose(u_true);
 u_true = M_2\u;
+=======
+%u = transpose(u);
+%u_true = transpose(u_true);
+%u = M_2\u_true;
+>>>>>>> 08ae5cfb95fc31ac15ddcb6c5083dfb5a2b4fe9b
 
 end 
