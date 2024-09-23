@@ -30,7 +30,7 @@ end
 
 R = sparse(D);
 
-lambda = 10;
+lambda = 1000;
 
 % define matrix 
 M_1 = ones(999); % vector of all values 1
@@ -40,6 +40,6 @@ M_2 = sparse(M_2);
 
 u = transpose(u);
 u_true = transpose(u_true);
-u = M_2\u_true;
+u_true = M_2\u;
 
 end 
