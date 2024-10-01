@@ -37,9 +37,8 @@ K = length(lambda);
 
 for j = 1:K
 lambda_val = lambda(j); 
-[u_denoised, u_true] = solveL2_1Dsignal(x,u_true, lambda_val);
+[u_denoised, u_true] = solveL2_1Dsignal(x, u_true, lambda_val);
 psn = psnr(u_denoised, u_true); 
-
 
 f2 = figure(2); 
 f2.Position = [200 200 1000 1500]; 
@@ -56,3 +55,9 @@ legend('True signal','Noising signal','Denoised signal');
 title(['Lambda: ', num2str(lambda_val), ', PSN: ', num2str(psn), ' dB'   ]); 
 
 end 
+
+% L1 penalty solver
+[x, u_true, noise] = lsdenoising(n, mean, std); 
+tolerance = 10^-8;
+[u_denoised, residuals] = solve_L1_IRLS(u_true, x, lambda(1), tolerance);
+disp(residuals)
