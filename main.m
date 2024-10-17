@@ -83,4 +83,42 @@ title('Optimal $\lambda$ for $L_{2}-regularization$', 'Interpreter', 'latex');
 % add loop for lambda ?
 [x, u_true, noise] = lsdenoising(n, mean, std); 
 tolerance = 10^-8;
-[u_denoised, residuals] = solve_L1_IRLS(u_true, x, lambda(1), tolerance);
+[u_denoised, residuals] = solve_L1_IRLS(u_true, x, lambda(3), tolerance);
+
+
+%FISTA
+[x, u_true, noise] = lsdenoising(n, mean, std); 
+tolerance = 10^-9;
+[u_denoised_fista, residuals_fista] = solve_L1_FISTA(u_true, x, 3e-5, tolerance);
+ 
+f4 = figure(4); 
+f4.Position = [200 200 600 2000];
+plot(u_true, 'k-', 'LineWidth', 3.0);  
+hold on; 
+plot(u, 'r-.', 'LineWidth', 0.5); 
+plot(u_denoised_fista, 'b-.', 'LineWidth', 2.5); 
+hold off; 
+grid on; 
+ylabel('u(x)'); 
+xlabel('index'); 
+legend('True signal','Noising signal','Denoised signal'); 
+title('Fista'); 
+disp(immse(u_denoised_fista, u_true)); 
+ 
+
+% Plot the PSNR and MSE curves
+K = 1e4; 
+lambda_vals = linspace(1e-16, 1e-4, K); 
+[psnr_val, mse_val, ~] = find_best_optimal_lambda_fista(x, u_true, lambda_vals);
+
+f5 = figure(5); 
+f5.Position = [200 200 700 500]; 
+yyaxis left; 
+plot(lambda_vals, psnr_val, 'b--', 'LineWidth', 2.0);
+ylabel('Peak-to-Noise-Ratio (dB)');
+yyaxis right; 
+plot(lambda_vals, mse_val, 'r--', 'LineWidth', 2.0); 
+ylabel('Mean Squared Error');
+xlabel('$\lambda$', 'Interpreter', 'latex'); 
+grid on; 
+title('Optimal $\lambda$ for $L_{1}-regularization$', 'Interpreter', 'latex');
