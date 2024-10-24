@@ -27,7 +27,7 @@ function [u_denoised, residuals] = solve_L1_FISTA(u_true, u_noise, lambda, toler
     end
 
     u_denoised = u_k;
-    disp(residuals);
+    %disp(residuals);
     
 end
 

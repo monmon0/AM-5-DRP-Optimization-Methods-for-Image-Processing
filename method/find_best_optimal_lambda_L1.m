@@ -1,4 +1,4 @@
-function [psnr_val, mse_val, optim_lambda_val] = find_best_optimal_lambda_fista(u, u_true, lambda_vals)
+function [psnr_val, mse_val, optim_lambda_val] = find_best_optimal_lambda_L1(u, u_true, lambda_vals, L1_solver)
 
 tolerance = 10^-9;
 K = length(lambda_vals); 
@@ -9,8 +9,8 @@ mse_val = NaN(size(lambda_vals));
 for i = 1:K
     lambda_val = lambda_vals(i);
     
-    % Call the FISTA solver with the current lambda value
-    [u_denoised, ~] = solve_L1_FISTA(u_true, u, lambda_val, tolerance);
+    % Call the L1 solver with the current lambda value
+    [u_denoised, ~] = L1_solver(u_true, u, lambda_val, tolerance);
     
     % Compute PSNR and MSE for the current denoised signal
     psn = psnr(u_denoised, u_true);  % compute psnr. decibel. 
