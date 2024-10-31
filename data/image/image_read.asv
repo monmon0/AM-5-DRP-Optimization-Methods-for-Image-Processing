@@ -1,0 +1,16 @@
+function [u_noising, u_true, noise_lvl] = image_read(noise_level, type)
+
+
+switch type
+    case 1
+        u_true = imread('cameraman.tif'); 
+        u_true = imres
+        u_noising = imnoise(u_true,'salt & pepper', noise_level);
+        noise_lvl = u_true - u_noising; 
+    
+end
+
+
+
+
+end 
