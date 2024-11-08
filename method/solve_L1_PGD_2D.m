@@ -4,7 +4,7 @@ function [u_denoised, residuals] = solve_L1_PGD(u_true, u_noise, lambda, toleran
     u_noise = double(u_noise);
 
     % Initialization
-    L = 1.0;
+    L = 2.0;
     t = 1/L;
     u_curr = u_noise;
     u_prev = u_curr; 
@@ -27,7 +27,7 @@ function [u_denoised, residuals] = solve_L1_PGD(u_true, u_noise, lambda, toleran
         end
 
         % Compute the residual (difference between consecutive iterations)
-        residual_curr = norm(u_curr(:) - u_prev(:));
+        residual_curr = norm(u_next(:) - u_curr(:));
         result_residuals = [result_residuals, residual_curr];
 
 
