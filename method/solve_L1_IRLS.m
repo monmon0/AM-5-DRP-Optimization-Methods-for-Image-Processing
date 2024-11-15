@@ -9,7 +9,7 @@ u_true = transpose(u_true);
 u_prev = zeros(1,n);
 
 D = zeros(n-1,n);
-
+epsilon = 1e-4; 
 % difference matrix
 for i = 1:n-1
     for j = 1:n
@@ -22,34 +22,36 @@ for i = 1:n-1
 end
 
 D = sparse(D);
-
+% disp(full(D)); 
 residual = [];
 
-while norm(u_curr - u_prev) > tolerance
+while norm(u_curr - u_prev,2) > tolerance
     % 1D difference vector
     D_1 = D*u_curr;
 
     for i = 1:n-1
-        D_1(i,1) = 1/abs(D_1(i,1));
+        %D_1(i,1) = 1/abs(D_1(i,1)); % [-1 1 -1] --> [x 1 x ]; 
+        D_1(i,1) = 1./sqrt((norm(D_1(i,1), 2) + epsilon)); 
     end
 
-    W = diag(transpose(D_1));
+    W = diag(transpose(D_1)); % [ 0 1 0] + const. 
 
-    M_solve = ones(n,1) + 2*lambda*transpose(D)*W*D;
+
+    M_solve = ones(n,1) + 2*lambda*transpose(D)*W*D; % [ 1 ] + 2 lambda * [-1 1 -1] [0 1 0] [ -1 , 1, -1] 
     M_solve = sparse(M_solve);
-
+    % disp(cond(M_solve));  
     u_prev = u_curr;
     u_curr = M_solve\u_true;
 
-    residual = [residual, norm(u_curr - u_prev)];
+    residual = [residual, norm(u_curr - u_prev,2)];
+    disp(norm(u_curr - u_prev, 2)); 
 end
 
 u_denoised = u_curr;
 residuals = residual;
-disp(residuals)
+%disp(residuals)
 
 end
-
 
 
 
