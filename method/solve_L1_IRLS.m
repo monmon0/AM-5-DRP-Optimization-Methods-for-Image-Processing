@@ -3,19 +3,19 @@ function [u_denoised, residuals] = solve_L1_IRLS(u_true, u_noise, lambda, tolera
 
 [~,n] = size(u_noise); 
 
-u_curr = transpose(u_noise);
-u_true = transpose(u_true);
+u_curr = u_noise;
+u_true = u_true;
 
 u_prev = zeros(1,n);
 
-D = zeros(n-1,n);
+D = zeros(n,n-1);
 
 % difference matrix
-for i = 1:n-1
-    for j = 1:n
+for i = 1:n
+    for j = 1:n-1
         if j == i
             D(i,j) = 1;
-        elseif i == j - 1
+        elseif i == j + 1
             D(i,j) = -1;
         end
     end
@@ -25,12 +25,16 @@ D = sparse(D);
 
 residual = [];
 
-while norm(u_curr - u_prev) > tolerance
+while norm(u_curr - u_prev, 2) > tolerance
     % 1D difference vector
+    disp(size(D))
+    disp(size(u_curr))
+    
     D_1 = D*u_curr;
 
     for i = 1:n-1
-        D_1(i,1) = 1/abs(D_1(i,1));
+        abs_var = abs(D_1(i,1));
+        D_1(i,1) = 1/abs_var;
     end
 
     W = diag(transpose(D_1));
@@ -41,7 +45,9 @@ while norm(u_curr - u_prev) > tolerance
     u_prev = u_curr;
     u_curr = M_solve\u_true;
 
-    residual = [residual, norm(u_curr - u_prev)];
+    disp(u_curr);
+
+    residual = [residual, norm(u_curr - u_prev, 2)];
 end
 
 u_denoised = u_curr;
