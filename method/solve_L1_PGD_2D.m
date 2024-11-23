@@ -1,39 +1,29 @@
-function [u_denoised, residuals] = solve_L1_PGD(u_true, u_noise, lambda, tolerance)
+function [u_denoised, residuals] = solve_L1_PGD_2D(u_true, u_noise, lambda, tolerance)
     % Convert inputs to double precision if they aren't already
     u_true = double(u_true);
     u_noise = double(u_noise);
 
     % Initialization
     L = 2.0;
-    t = 1/L;
+    t = 1 / L;
     u_curr = u_noise;
-    u_prev = u_curr; 
     result_residuals = [];  
     residual_curr = tolerance + 1;
-    [n,m,l] = size(u_true);   
-    
-    
+   
     while residual_curr > tolerance
-        u_next = zeros(n, m, l);  % Initialize the next iterate
-        for c = 1:l
-            for i = 1: n
-                for j = 1:m
-                    % Update each element using the given formula
-                    temp = u_curr(i,j,c) - t * (u_curr(i,j,c) - u_true(i,j,c));
-                    u_next(i,j,c) = sign(temp) * max(abs(temp) - lambda * t, 0);
-                end
-            end
-        end
-
+        % Vectorized update using the formula for each element
+        temp = u_curr - t * (u_curr - u_true);  % Gradient step
+        u_next = double(sign(temp) .* max(abs(temp) - lambda * t, 0));  % Soft thresholding
+        
         % Compute the residual (difference between consecutive iterations)
-        residual_curr = norm(u_next(:) - u_curr(:));
+        residual_curr = norm(u_next - u_curr, 'fro');
         result_residuals = [result_residuals, residual_curr];
 
-
         % Update the current solution and previous solution
-        u_prev = u_curr;   % Update u_prev for the next iteration
-        u_curr = u_next;   % Update u_curr to the new solution
+        u_curr = u_next; 
     end
-    u_denoised = u_curr;
+
+    u_denoised = u_curr;  % Final denoised signal
     residuals = result_residuals;
 end
+
