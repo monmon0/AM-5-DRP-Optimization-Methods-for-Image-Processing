@@ -1,58 +1,49 @@
 function [u_denoised, residuals] = solve_L1_IRLS_2D(u_true, u_noise, lambda, tolerance)
-
-    u_curr = double(u_noise);
+    
+% convert to double precision
     u_true = double(u_true);
+    u_noise = double(u_noise);
 
-    [n,m,l] = size(u_true);  
-    disp(n,n,l)
-    u_prev = zeros(n,m,l); % change 1 
-
-
-    D = zeros(n,m);
-    epsilon = 1e-4; 
-    % difference matrix
-    for i = 1:m
-        for j = 1:n
-            if j == i
-                D(i,j) = 1;
-            elseif i == j + 1
-                D(i,j) = -1;
-            end
-        end
-    end
+    [m, n] = size(u_noise); 
     
-    D = sparse(D);
+    u_curr = u_noise;
+    u_prev = zeros(m, n);
+    epsilon = 1e-4; % Small constant to avoid division by zero
     
+    % Create difference operators for horizontal and vertical directions
+    Dx = spdiags([-ones(n,1), ones(n,1)], [0, 1], n, n);
+    Dx(n,n) = 0; % Ensure no wrapping
+    Dx = kron(speye(m), Dx); % Expand to handle 2D
+    
+    Dy = spdiags([-ones(m,1), ones(m,1)], [0, 1], m, m);
+    Dy(m,m) = 0; % Ensure no wrapping
+    Dy = kron(Dy, speye(n)); % Expand to handle 2D
+
     residual = [];
     
-    while norm(u_curr - u_prev,2) > tolerance
-        % 1D difference vector
+    while norm(u_curr(:) - u_prev(:), 2) > tolerance
+        % Compute differences in both directions
+        Dxu = Dx * u_curr(:);
+        Dyu = Dy * u_curr(:);
         
-        D_1 = D*u_curr;
-    
-        for i = 1:n-1
-            D_1(i,1) = 1./sqrt((norm(D_1(i,1), 2) + epsilon)); 
-        end
-    
-        W = diag(transpose(D_1)); 
-    
-    
-        M_solve = ones(n,1) + 2*lambda*transpose(D)*W*D; % [ 1 ] + 2 lambda * [-1 1 -1] [0 1 0] [ -1 , 1, -1] 
-        M_solve = sparse(M_solve);
-     
-        % update the current and previous matrix sol
+        % Compute weights for the IRLS process
+        Wx = spdiags(1 ./ sqrt(Dxu.^2 + epsilon), 0, numel(Dxu), numel(Dxu));
+        Wy = spdiags(1 ./ sqrt(Dyu.^2 + epsilon), 0, numel(Dyu), numel(Dyu));
+        
+        % Construct the weighted regularization matrix
+        L = lambda * (Dx' * Wx * Dx + Dy' * Wy * Dy);
+        
+        % Solve the linear system
         u_prev = u_curr;
-        u_curr = M_solve\u_true;
-    
-        residual = [residual, norm(u_curr - u_prev,2)];
+        A = speye(m * n) + 2 * L; % Regularized system matrix
+        u_curr = reshape(A \ u_true(:), m, n); % Solve and reshape to 2D
+        
+        % Calculate residual
+        residual = [residual, norm(u_curr(:) - u_prev(:), 2)];
+        % disp(norm(u_curr(:) - u_prev(:), 2)); 
     end
     
     u_denoised = u_curr;
     residuals = residual;
-    
-    end
-    
-    
-    
-    
-    
+end
+
