@@ -27,8 +27,8 @@ imshow(u);
 title(sprintf('Noising Image, PSNR = %.5f, MSE = %.5f', psn, mse_val), 'Color', 'black');
 
 
-----------------------------FISTA METHOD----------------------------------
-Load or create a noisy 2D image 
+%----------------------------FISTA METHOD----------------------------------
+% Load or create a noisy 2D image 
 [x, u_true] = image_read(noise_level, type); 
 tolerance = 1e-9;
 lambda = 3e-5;
@@ -88,7 +88,6 @@ imshow(u_denoised_pgd, []);
 title(['Denoised Image (PGD), PSNR: ', ...
     num2str(psnr(u_denoised_pgd, u_true)), ...
     ' dB, MSE: ', num2str(immse(u_denoised_pgd, u_true))]);
-disp(1e-9)
 
 
 %----------------------------IRLS METHOD------------------------------------
