@@ -8,8 +8,8 @@ clear all;
 addpath('./data/image'); 
 addpath('./method'); 
 
-%n_vals = [16, 32, 64, 128, 256, 512, 1048, 1048*2, 1048*4, 1048*8]; 
-n_vals = 2.^(4:30);
+n_vals = [16, 32, 64, 128, 256, 512, 1048, 1048*2, 1048*4, 1048*8]; 
+%n_vals = 2.^(4:30);
 iters_IRLS = zeros(size(n_vals)); 
 iters_FISTA = zeros(size(n_vals)); 
 iters_PGD = zeros(size(n_vals)); 
@@ -27,7 +27,7 @@ noise_level = 0.5;
                         
 % L1 penalty solver
 % add loop for lambda ?
-%[x, u_true, noise] = image_read(noise_level, type);
+%[u, u_true, noise_lvl ] = image_read(noise_level, type);
 %tolerance = 10^-8;
 %[u_denoised_irls, residuals_irls] = solve_L1_IRLS_2D(u_true, u, 1e3, tolerance);
 
@@ -68,7 +68,9 @@ fprintf('-----------------------------------------------------------------');
 end 
 
 
+
 figure(1); 
+plot(n_vals, iters_IRLS, 'k-', 'LineWidth', 3); 
 hold on; 
 plot(n_vals, iters_FISTA, 'r-', 'LineWidth', 3); 
 plot(n_vals, iters_PGD, 'b-', 'LineWidth', 3); 

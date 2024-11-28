@@ -22,7 +22,7 @@ noise_level = 0.5;
                         
 % L1 penalty solver
 % add loop for lambda ?
-%[x, u_true, noise] = lsdenoising(n, mean, std);
+%[u, u_true, noise_lvl ] = image_read(noise_level, type);
 %tolerance = 10^-8;
 %[u_denoised_irls, residuals_irls] = solve_L1_IRLS_2D(u_true, u, 1e3, tolerance);
 
@@ -31,13 +31,13 @@ noise_level = 0.5;
 
 %----------------------------FISTA METHOD----------------------------------
  
-%[x, u_true, noise] = lsdenoising(n, mean, std); 
+[u, u_true, noise_lvl ] = image_read(noise_level, type);
 tolerance = 10^-8;
 [u_denoised_fista, residuals_fista] = solve_L1_FISTA_2D(u_true, u, 1e-3, tolerance);
 
 %----------------------------PGD METHOD------------------------------------
 
-%[x, u_true, noise] = lsdenoising(n, mean, std); 
+[u, u_true, noise_lvl ] = image_read(noise_level, type);
 tolerance = 10^-8;
 [u_denoised_pgd, residuals_pgd] = solve_L1_PGD_2D(u_true, u, 1e-3, tolerance);
 
