@@ -27,8 +27,8 @@ imshow(u);
 title(sprintf('Noising Image, PSNR = %.5f, MSE = %.5f', psn, mse_val), 'Color', 'black');
 
 
-----------------------------FISTA METHOD----------------------------------
-Load or create a noisy 2D image 
+% ----------------------------FISTA METHOD----------------------------------
+% Load or create a noisy 2D image 
 [x, u_true] = image_read(noise_level, type); 
 tolerance = 1e-9;
 lambda = 3e-5;
