@@ -3,7 +3,7 @@ function [u_denoised, residuals] = solve_L1_FISTA_2D(u_true, u_noise, lambda, to
     u_true = double(u_true);
     u_noise = double(u_noise);
 
-    L = 1.0;  
+    L = 2.0; % 2 - 3., T(x) = y; x, z (x neq z) such that || T(x) - T(z) || < || T ||^k || x - z||  ; L = || T ||^k, L = 1 || +/- 1 ||, . 
     u_k = u_noise;  
     u_prev = u_noise;  
     v = u_k;  
