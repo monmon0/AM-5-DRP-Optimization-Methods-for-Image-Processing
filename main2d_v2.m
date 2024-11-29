@@ -23,16 +23,6 @@ noise_level = 0.5;
 %rng('default') % For reproducibility
 [u, u_true, noise_lvl ] = image_read(noise_level, type);
 
-%----------------------------IRLS--------------------------------------------
-                        
-% L1 penalty solver
-% add loop for lambda ?
-%[u, u_true, noise_lvl ] = image_read(noise_level, type);
-%tolerance = 10^-8;
-%[u_denoised_irls, residuals_irls] = solve_L1_IRLS_2D(u_true, u, 1e3, tolerance);
-
-% lambda = difference than other algorithms. 
-
 
 %----------------------------FISTA METHOD----------------------------------
  
